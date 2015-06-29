@@ -1,0 +1,41 @@
+<div ng-controller="ShortnerController">
+
+    <div ng-init="customEnabled = false; showAlert= false;">
+
+        <!-- <alert type="danger">Just another try</alert> -->
+
+
+        <div class="input-group">
+
+            <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here"
+                   ng-model="longUrl">
+            <span class="input-group-btn">
+                <a class="btn btn btn-success" ng-hide="customEnabled" ng-click="saveRandomUrl(longUrl)">Calculate</a>
+            </span>
+            <!--<a class="btn btn-lg btn-success" ng-click="showCustom()" style="width:32px;height:32px"></a>-->
+        </div>
+
+        <!-- /input-group -->
+        <br>
+
+        <label style="display:inline; width:100%">Do you want to Customize it?
+            <a ng-click="customEnabled = !customEnabled" ng-show="customEnabled"><span
+                    class="glyphicon glyphicon-minus-sign"> </span></a>
+            <a ng-click="customEnabled = !customEnabled" ng-hide="customEnabled"><span
+                    class="glyphicon glyphicon-plus-sign"> </span></a>
+            <br>
+            <br>
+        </label>
+
+        <div class=input-group" ng-show="customEnabled" style="display:inline">
+
+            <input type="text" class="form-control" style="font-weight:bold" placeholder="Check for an available URL"
+                   ng-model="shortUrl">
+            <span class="input-group-btn">
+                <a class="btn btn btn-success" ng-show="customEnabled" ng-click="saveCustomUrl(longUrl, shortUrl)">Save Custom</a>
+            </span>
+            <span class="alert alert-warning" ng-show="customExist">This custom already exist!</span>
+
+        </div>
+    </div>
+</div>
