@@ -1,4 +1,4 @@
-<div ng-controller="ShortnerController">
+<div ng-controller="ShortenerController">
 
     <div ng-init="customEnabled = false; showAlert= false;">
 
@@ -18,21 +18,24 @@
         <!-- /input-group -->
         <br>
 
-        <label style="display:inline; width:100%">Do you want to Customize it?
-            <a ng-click="customEnabled = !customEnabled" ng-show="customEnabled"><span
-                    class="glyphicon glyphicon-minus-sign"> </span></a>
-            <a ng-click="customEnabled = !customEnabled" ng-hide="customEnabled"><span
-                    class="glyphicon glyphicon-plus-sign"> </span></a>
-            <br>
-            <br>
-        </label>
+        <div class="text-center">
+            <label style="display:inline; width:100%">Do you want to Customize it?
+                <a ng-click="customEnabled = !customEnabled" ng-show="customEnabled"><span
+                        class="glyphicon glyphicon-minus-sign"> </span></a>
+                <a ng-click="customEnabled = !customEnabled" ng-hide="customEnabled"><span
+                        class="glyphicon glyphicon-plus-sign"> </span></a>
+                <br>
+                <br>
+            </label>
+        </div>
 
         <div class=input-group" ng-show="customEnabled" style="display:inline">
 
             <input type="text" class="form-control" style="font-weight:bold" placeholder="Check for an available URL"
                    ng-model="shortUrl">
             <span class="input-group-btn">
-                <a class="btn btn btn-success" ng-show="customEnabled" ng-click="saveCustomUrl(longUrl, shortUrl)">Save Custom</a>
+                <a class="btn btn btn-success" ng-show="customEnabled" ng-click="saveCustomUrl(longUrl, shortUrl)">Save
+                    Custom</a>
             </span>
             <span class="alert alert-warning" ng-show="customExist">This custom already exist!</span>
 

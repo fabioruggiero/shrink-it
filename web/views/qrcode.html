@@ -1,16 +1,16 @@
-<div ng-controller="QrcodeController as qrcode" ng-init="qrcodeEnabled = false">
+<div ng-controller="QrcodeController" ng-init="qrcodeEnabled = false">
 
     <div class="input-group">
 
         <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here" ng-model="longUrl">
             <span class="input-group-btn">
-                <a class="btn btn btn-success" ng-hide="customEnabled" ng-click="qrcodeEnabled = !qrcodeEnabled">Get the QRcode</a>
+                <a class="btn btn btn-success" ng-click="qrcodeEnabled = !qrcodeEnabled">Get the QRcode</a>
             </span>
 
     </div>
 
-    <div class="jumbotron" ng-show="qrcodeEnabled">
+    <div class="jumbotron" ng-show="stored || qrcodeEnabled">
 
-        <qrcode version="2" error-correction-level="M" size="200" data="{{longUrl}}"></qrcode>
+        <qrcode version="2" error-correction-level="M" size="200" data="{{longStored}}"></qrcode>
     </div>
 </div>
