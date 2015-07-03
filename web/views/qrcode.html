@@ -1,15 +1,26 @@
-<div ng-controller="QrcodeController" ng-init="qrcodeEnabled = false">
+<div ng-controller="QrcodeController">
 
-    <div class="input-group">
+    <div ng-hide="stored">
+        <form name="qrcodeForm" class="input-group" novalidate>
 
-        <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here" ng-model="longUrl">
-            <span class="input-group-btn">
-                <a class="btn btn btn-success" ng-click="qrcodeEnabled = !qrcodeEnabled">Get the QRcode</a>
-            </span>
+            <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here" ng-model="urlToEncode" required>
+                <span class="input-group-btn">
+                    <a class="btn btn btn-primary" ng-click="qrcodeForm.$valid && showQrcode()">Get the QRcode</a>
+                </span>
 
+        </form><br>
+
+        <div class="jumbotron text-center" collapse="!qrcodeEnabled">
+
+            <h2>Your url has been encoded!</h2><br>
+
+            <qrcode version="2" error-correction-level="M" size="200" data="{{urlToEncode}}"></qrcode>
+        </div>
     </div>
 
-    <div class="jumbotron" ng-show="stored || qrcodeEnabled">
+    <div class="jumbotron" ng-show="stored">
+
+        <h2>Your url has been encoded!</h2>
 
         <qrcode version="2" error-correction-level="M" size="200" data="{{longStored}}"></qrcode>
     </div>

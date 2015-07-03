@@ -5,22 +5,25 @@ var app = angular.module('appController', [
     'BusinessDelegate',
     'angularLoad',
     'monospaced.qrcode',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'googlechart'
 ]);
 
-app.controller('TabController', ['TabService', function (TabService) {
+app.controller('TabController', [
+    'TabService',
+    function (TabService) {
 
-    this.selectTab = function (tabToSelect) {
+        this.selectTab = function (tabToSelect) {
 
-        TabService.selectTab(tabToSelect);
-    };
+            TabService.selectTab(tabToSelect);
+        };
 
-    this.isSelected = function (tabToCompare) {
+        this.isSelected = function (tabToCompare) {
 
-        return TabService.isSelected(tabToCompare);
-    };
+            return TabService.isSelected(tabToCompare);
+        };
 
-}]);
+    }]);
 
 app.controller('ShortenerController', [
     '$scope',
@@ -29,9 +32,11 @@ app.controller('ShortenerController', [
     'TabService',
     function ($scope, $rootScope, BusinessDelegate, TabService) {
 
-        $scope.customExist = false;
         $rootScope.stored = false;
 
+        $scope.alert = [
+            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.', visible: false}
+        ];
 
         $scope.saveRandomUrl = function (long) {
 
@@ -123,7 +128,7 @@ app.controller('ShortenerController', [
 
                     } else {
 
-                        $scope.customExist = true;
+                        $scope.alert.visible = true;
                     }
 
                 }, function (error) {
@@ -202,24 +207,197 @@ app.controller('PreviewController', [
 
             deferred.promise.then(function (thumb) {
 
+                console.log(thumb);
                 $scope.preview = thumb;
             }, function (error) {
                 console.error('Error in loading thumbnail' + error);
             });
-        }
-
+        };
 
     }]);
 
-app.controller('QrcodeController', function () {
+app.controller('QrcodeController', [
+    '$scope',
+    function ($scope) {
 
+        $scope.qrcodeEnabled = false;
 
-});
+        $scope.showQrcode = function () {
 
-app.controller('StatsController', [function ($scope) {
-
+            $scope.qrcodeEnabled = true;
+        }
 
 }]);
+
+app.controller('StatsController', [
+    '$scope',
+    'BusinessDelegate',
+    'angularLoad',
+    function ($scope, BusinessDelegate, angularLoad) {
+
+        $scope.showChart = false;
+
+        var loadData = function () {
+
+            BusinessDelegate.getStats()
+                .then(function (result) {
+
+                    console.log(result);
+                    $scope.stats = result.results;
+
+                    $scope.showChart = true;
+                    chartPopulate();
+
+
+                }, function (error) {
+
+                    console.error('Error with loading stats ' + error);
+                });
+        };
+
+        angularLoad.loadScript('/js3rdparty/sockjs/sockjs.js')
+            .then(function () {
+
+
+                angularLoad.loadScript('/js3rdparty/vertxbus/vertxbus.js')
+                    .then(function () {
+
+                        console.log("i'm in!");
+                        loadData();
+
+                    }, function (error) {
+
+                        console.error('Error in loading vertxbus.js ' + error);
+
+                    });
+
+            }, function (error) {
+
+                console.error('Error in loading sockjs.js ' + error);
+            });
+
+        var chartPopulate = function () {
+
+            $scope.chartObject = {
+                "type": "AreaChart",
+                "displayed": true,
+                "data": {
+                    "cols": [
+                        {
+                            "id": "month",
+                            "label": "Month",
+                            "type": "string",
+                            "p": {}
+                        },
+                        {
+                            "id": "laptop-id",
+                            "label": "Laptop",
+                            "type": "number",
+                            "p": {}
+                        },
+                        {
+                            "id": "desktop-id",
+                            "label": "Desktop",
+                            "type": "number",
+                            "p": {}
+                        },
+                        {
+                            "id": "server-id",
+                            "label": "Server",
+                            "type": "number",
+                            "p": {}
+                        },
+                        {
+                            "id": "cost-id",
+                            "label": "Shipping",
+                            "type": "number"
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "c": [
+                                {
+                                    "v": "January"
+                                },
+                                {
+                                    "v": 19,
+                                    "f": "42 items"
+                                },
+                                {
+                                    "v": 12,
+                                    "f": "Ony 12 items"
+                                },
+                                {
+                                    "v": 7,
+                                    "f": "7 servers"
+                                },
+                                {
+                                    "v": 4
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": "February"
+                                },
+                                {
+                                    "v": 13
+                                },
+                                {
+                                    "v": 1,
+                                    "f": "1 unit (Out of stock this month)"
+                                },
+                                {
+                                    "v": 12
+                                },
+                                {
+                                    "v": 2
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": "March"
+                                },
+                                {
+                                    "v": 24
+                                },
+                                {
+                                    "v": 5
+                                },
+                                {
+                                    "v": 11
+                                },
+                                {
+                                    "v": 6
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "options": {
+                    "title": "Sales per month",
+                    "isStacked": "true",
+                    "fill": 20,
+                    "displayExactValues": true,
+                    "vAxis": {
+                        "title": "Sales unit",
+                        "gridlines": {
+                            "count": 10
+                        }
+                    },
+                    "hAxis": {
+                        "title": "Date"
+                    }
+                },
+                "formatters": {},
+                "view": {}
+            }
+        }
+
+    }]);
 
 app.controller('RedirectController', [
     '$scope',
@@ -273,15 +451,14 @@ app.controller('RedirectController', [
 
                     }, function (error) {
 
-                        console.error('Error in loading vertxbus.js '+error);
+                        console.error('Error in loading vertxbus.js ' + error);
 
                     });
 
             }, function (error) {
 
-                console.error('Error in loading sockjs.js '+error);
+                console.error('Error in loading sockjs.js ' + error);
             });
 
     }]);
-
 

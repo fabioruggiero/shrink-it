@@ -1,28 +1,31 @@
 <div class="container" ng-controller="PreviewController as preview" ng-init="previewEnabled = false">
 
-    <div class="input-group" ng-hide="stored">
+    <form name="previewForm" class="input-group" ng-hide="stored" novalidate>
 
         <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your shortened URL here"
-               ng-model="shortUrl">
+               ng-model="shortUrl" required>
             <span class="input-group-btn">
-                <a class="btn btn btn-success" ng-click="thumbnailShow('previewCheck', shortUrl)">Look at Preview</a>
+                <a class="btn btn btn-primary" ng-click="previewForm.$valid && thumbnailShow('previewCheck', shortUrl)">Look at Preview</a>
             </span>
 
-    </div>
+    </form>
 
     <div ng-show="stored" class="text-center">
 
         <h3>Your url has been stored!</h3>
         <br>
 
-        <div class="input-group">
+        <form class="input-group">
 
-            <pre class="form-control">http://127.0.0.1:8080/#/{{shortStored}}</pre>
+            <pre id="pre" class="form-control" style="font-weight:bold">http://127.0.0.1:8080/#/{{shortStored}}</pre>
             <span class="input-group-btn">
-                <a class="btn btn btn-success" ng-click="thumbnailShow('previewStored')">Look at Preview</a>
+                <a popover="Copy it on clipboard" popover-trigger="mouseenter" class="btn btn btn-primary">
+                    <span class="glyphicon glyphicon-paste"></span>
+                </a>
+                <a class="btn btn btn-primary" ng-click="thumbnailShow('previewStored')">Look at Preview</a>
             </span>
 
-        </div>
+        </form>
 
     </div>
 

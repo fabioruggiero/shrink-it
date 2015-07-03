@@ -55,6 +55,14 @@ module.factory('BusinessDelegate',['CRUD', function (CRUD) {
 
             return CRUD.update('stats', criteria, data);
 
+        },
+
+        getStats : function() {
+
+            //Get all data from stats collection
+            var matcher = {};
+
+            return CRUD.find('stats', matcher);
         }
 
     };

@@ -50,6 +50,14 @@ var webServerConf = {
         action : 'update',
         collection : 'stats'
       }
+    },
+    {
+      address : 'vertx.mongopersistor',
+      requires_auth : false,
+      match : {
+        action : 'find',
+        collection : 'stats'
+      }
     }
   ],
 

@@ -1,8 +1,13 @@
-/**
- * Created by Fabio on 25/06/2015.
- */
-
 var app = angular.module('appDirective', []);
+
+app.directive('homeDirective', function() {
+
+    return {
+
+        restrict : 'E',
+        templateUrl : 'views/home.html'
+    }
+});
 
 app.directive('shortenerDirective', function() {
 
@@ -31,12 +36,12 @@ app.directive('qrcodeDirective', function() {
     }
 });
 
-
 app.directive('statsDirective', function() {
 
     return {
 
         restrict : 'E',
-        templateUrl : 'views/stats.html'
+        templateUrl : 'views/stats.html',
+        priority: 0
     }
 });

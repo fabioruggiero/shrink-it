@@ -18,10 +18,10 @@ app.config(function ($routeProvider) {
 
     $routeProvider
         .when('/:url', {
-            templateUrl: 'views/redirect.html',
-            controller: 'RedirectController'
+            templateUrl: 'views/redirect.html'
         });
 
 });
+
 
 
