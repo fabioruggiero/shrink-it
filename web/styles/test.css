@@ -5,8 +5,7 @@
 #div-header {
 
     background-image: url(images/header-background-01.png);
-
-    background-size: 100%
+    background-size: 100%;
 }
 
 .center-pills {
@@ -45,3 +44,23 @@
 .ng-valid.ng-dirty {
     border-color: #78FA89;
 }
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    background-color: #f5f5f5;
+
+}
+
+

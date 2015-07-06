@@ -1,9 +1,25 @@
 <div ng-controller="StatsController">
 
-    <ul>
-        <li ng-repeat="stat in stats">{{stat.nClick}}</li>
-    </ul>
+    <form class="input-group">
+
+        <input class="form-control" style="font-weight:bold" placeholder="Paste your URL here"
+               ng-model="url">
+            <span class="input-group-btn">
+                <a class="btn btn btn-primary" ng-click="getVisitOf(url)">
+                    Get Visit</a>
+                <a class="btn btn btn-primary" ng-click="topTenVisited()">
+                    Aggregate</a>
+            </span>
+
+    </form><br><br>
 
     <div google-chart chart="chartObject"></div>
+
+    <p>{{url}} has been visited {{count}} times!</p>
+    <ul>
+        <li ng-repeat="visit in visits">
+            {{visit.from}} ... {{visit.when | date}}
+        </li>
+    </ul>
 
 </div>

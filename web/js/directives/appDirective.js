@@ -41,7 +41,6 @@ app.directive('statsDirective', function() {
     return {
 
         restrict : 'E',
-        templateUrl : 'views/stats.html',
-        priority: 0
+        templateUrl : 'views/stats.html'
     }
 });

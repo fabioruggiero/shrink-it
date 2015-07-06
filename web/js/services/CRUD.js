@@ -16,15 +16,15 @@ module.factory('CRUD', ['$q', function ($q) {
     return {
 
         //Invio richiesta al server
-        sendRequest: function (documentoParametri) {
+        sendRequest: function (requestDoc) {
 
             var modulo = 'vertx.mongopersistor';
             var deferred = $q.defer();
 
-            eb.send(modulo, documentoParametri,
+            eb.send(modulo, requestDoc,
                 function (reply) {
+                    console.log(reply);
                     deferred.resolve(reply);
-                    console.log('A reply received: ', reply);
                 });
             return deferred.promise;
 
@@ -32,19 +32,37 @@ module.factory('CRUD', ['$q', function ($q) {
 
         find: function (collection, matcher) {
 
-            var parametri = {action: 'find', collection: collection, matcher: matcher};
-            return this.sendRequest(parametri);
+            var params = {
+                action: 'find',
+                collection: collection,
+                matcher: matcher
+            };
+            return this.sendRequest(params);
+        },
+
+        findOne: function (collection, matcher) {
+
+            var params = {
+                action: 'findone',
+                collection: collection,
+                matcher: matcher
+            };
+            return this.sendRequest(params);
         },
 
         save: function (collection, document) {
 
-            var parametri = {action: 'save', collection: collection, document: document};
-            return this.sendRequest(parametri);
+            var params = {
+                action: 'save',
+                collection: collection,
+                document: document
+            };
+            return this.sendRequest(params);
         },
 
         update: function(collection, criteria, data) {
 
-            var parametri = {
+            var params = {
                 action: 'update',
                 collection: collection,
                 criteria: criteria,
@@ -53,7 +71,27 @@ module.factory('CRUD', ['$q', function ($q) {
                 multi: false
             };
 
-            return this.sendRequest(parametri);
+            return this.sendRequest(params);
+        },
+
+        count: function(collection, matcher) {
+
+            var params = {
+                action: 'count',
+                collection: collection,
+                matcher: matcher
+            };
+            return this.sendRequest(params);
+        },
+
+        aggregate: function(collection, pipelines) {
+
+            var params = {
+                action: 'aggregate',
+                collection: collection,
+                pipelines: pipelines
+            };
+            return this.sendRequest(params);
         }
     };
 }]);

@@ -9,7 +9,6 @@ app.factory('TabService', function () {
         selectTab: function (tabToSelect) {
 
             currentTab = tabToSelect;
-            console.log('Service says: ' + tabToSelect);
         },
 
         isSelected: function (tabToCompare) {

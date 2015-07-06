@@ -1,23 +1,30 @@
-<div class="container" ng-controller="PreviewController as preview" ng-init="previewEnabled = false">
+<div class="row">
+    <div class="col-md-2">
+        <p class="text-muted"></p>
+    </div>
+        <div class="col-md-8" ng-controller="PreviewController as preview" ng-init="previewEnabled = false">
 
-    <form name="previewForm" class="input-group" ng-hide="stored" novalidate>
+            <form name="previewForm" class="input-group" ng-hide="stored" novalidate>
 
-        <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your shortened URL here"
-               ng-model="shortUrl" required>
+                <input type="url" class="form-control" style="font-weight:bold"
+                       placeholder="Paste your shortened URL here"
+                       ng-model="shortUrl" required>
             <span class="input-group-btn">
-                <a class="btn btn btn-primary" ng-click="previewForm.$valid && thumbnailShow('previewCheck', shortUrl)">Look at Preview</a>
+                <a class="btn btn btn-primary" ng-click="previewForm.$valid && thumbnailShow('previewCheck', shortUrl)">Look
+                    at Preview</a>
             </span>
 
-    </form>
+            </form>
 
-    <div ng-show="stored" class="text-center">
+            <div ng-show="stored" class="text-center">
 
-        <h3>Your url has been stored!</h3>
-        <br>
+                <h3>Your url has been stored!</h3>
+                <br>
 
-        <form class="input-group">
+                <form class="input-group">
 
-            <pre id="pre" class="form-control" style="font-weight:bold">http://127.0.0.1:8080/#/{{shortStored}}</pre>
+                    <pre id="pre" class="form-control"
+                         style="font-weight:bold">http://127.0.0.1:8080/#/{{shortStored}}</pre>
             <span class="input-group-btn">
                 <a popover="Copy it on clipboard" popover-trigger="mouseenter" class="btn btn btn-primary">
                     <span class="glyphicon glyphicon-paste"></span>
@@ -25,14 +32,19 @@
                 <a class="btn btn btn-primary" ng-click="thumbnailShow('previewStored')">Look at Preview</a>
             </span>
 
-        </form>
+                </form>
 
+            </div>
+
+            <div ng-show="previewEnabled" class="center-block">
+                <iframe height="365" width="485" ng-src="{{preview}}"></iframe>
+
+            </div>
+
+
+        </div>
+
+    <div class="col-md-2">
+        <p class="text-muted"></p>
     </div>
-
-    <div ng-show="previewEnabled" class="center-block">
-        <iframe height="365" width="485" ng-src="{{preview}}"></iframe>
-
-    </div>
-
-
 </div>

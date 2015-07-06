@@ -4,28 +4,27 @@
 
 var module = angular.module('BusinessDelegate', ['CRUD']);
 
-module.factory('BusinessDelegate',['CRUD', function (CRUD) {
+module.factory('BusinessDelegate', ['CRUD', function (CRUD) {
 
     return {
 
 
-        saveUrl: function (long, short, isCustom, id_stats) {
+        saveUrl: function (long, short, isCustom) {
 
             var document = {
                 longUrl: long,
                 shortUrl: short,
                 custom: isCustom,
-                id_stats: id_stats,
                 createdOn: Date.now()
             };
 
             return CRUD.save('urls', document);
         },
 
-        saveStat : function () {
+        saveStat: function () {
 
             var document = {
-                nClick : 0
+                nClick: 0
             };
 
             return CRUD.save('stats', document);
@@ -40,30 +39,68 @@ module.factory('BusinessDelegate',['CRUD', function (CRUD) {
 
         },
 
-        getLongByShort : function (short) {
+        existOneShortUrl: function (short) {
 
-            var matcher = {shortUrl : short};
+            var matcher = {shortUrl: short};
+
+            return CRUD.findOne('urls', matcher);
+
+        },
+
+        getLongByShort: function (short) {
+
+            var matcher = {shortUrl: short};
 
             return CRUD.find('urls', matcher);
 
         },
 
-        updateClick : function(idStats) {
+        saveVisit: function (idUrl, from) {
 
-            var criteria = {_id : idStats};
-            var data = {$inc : {nClick : 1}};
+            var document = {
+                id_url: idUrl,
+                visitedOn: Date.now(),
+                visitedFrom: from
+            };
 
-            return CRUD.update('stats', criteria, data);
-
+            return CRUD.save('visits', document);
         },
 
-        getStats : function() {
+        countVisits: function (idUrl) {
 
-            //Get all data from stats collection
-            var matcher = {};
+            var matcher = {
+                id_url: idUrl
+            };
 
-            return CRUD.find('stats', matcher);
+            return CRUD.count('visits', matcher);
+        },
+
+        getVisitFrom : function (idUrl) {
+
+            var matcher = {
+                id_url: idUrl
+            };
+
+            return CRUD.find('visits', matcher);
+        },
+
+        getVisitTime : function (idUrl) {
+
+            var matcher = {
+                id_url: idUrl
+            };
+
+            return CRUD.find('visits', matcher);
+        },
+
+        aggregateVisits : function () {
+
+            var pipelines =
+
+                {$group: {_id: '$id_url', count: {$sum: 1}}}
+            ;
+
+            return CRUD.aggregate('visits', pipelines);
         }
-
     };
 }]);

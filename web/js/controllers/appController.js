@@ -1,6 +1,7 @@
 var app = angular.module('appController', [
     'ngRoute',
     'ngSanitize',
+    'ngAnimate',
     'CRUD',
     'BusinessDelegate',
     'angularLoad',
@@ -35,7 +36,7 @@ app.controller('ShortenerController', [
         $rootScope.stored = false;
 
         $scope.alert = [
-            { type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.', visible: false}
+            {type: 'danger', msg: 'Oh snap! Change a few things up and try submitting again.', visible: false}
         ];
 
         $scope.saveRandomUrl = function (long) {
@@ -49,37 +50,26 @@ app.controller('ShortenerController', [
 
                     if (!exist) {
 
-                        BusinessDelegate.saveStat()
-                            .then(function (statDoc) {
-                                if (statDoc.status === 'ok') {
-
-                                    BusinessDelegate.saveUrl(long, newUrl, false, statDoc._id)
-                                        .then(function (result) {
-                                            if (result.status === 'ok') {
-                                                $rootScope.stored = true;
-                                                $rootScope.shortStored = newUrl;
-                                                $rootScope.longStored = long;
-                                                TabService.selectTab('preview');
-                                            }
-                                            else {
-                                                console.error('Failed saving url');
-                                            }
-
-                                        }, function (error) {
-                                            console.error('Failed saving url (promise)' + error);
-                                        });
-
-                                } else {
-                                    console.error('Error in creating stat document');
+                        BusinessDelegate.saveUrl(long, newUrl, false)
+                            .then(function (result) {
+                                if (result.status === 'ok') {
+                                    $rootScope.stored = true;
+                                    $rootScope.shortStored = newUrl;
+                                    $rootScope.longStored = long;
+                                    TabService.selectTab('preview');
                                 }
+                                else {
+                                    console.error('Failed saving url');
+                                }
+
                             }, function (error) {
-                                console.error('Error in creating stat document(promise)' + error);
+                                console.error('Failed saving url (promise)' + error);
                             });
 
                     } else {
 
+                        //Richiama il metodo ricorsivamente fino alla creazione di un url univoco
                         $scope.saveRandomUrl(long);
-
                     }
 
                 }, function (error) {
@@ -99,32 +89,23 @@ app.controller('ShortenerController', [
 
                     if (!exist) {
 
-                        BusinessDelegate.saveStat()
-                            .then(function (statDoc) {
-                                if (statDoc.status === 'ok') {
 
-                                    BusinessDelegate.saveUrl(long, short, true, statDoc._id)
-                                        .then(function (result) {
-                                            if (result.status === 'ok') {
-                                                $rootScope.stored = true;
-                                                $rootScope.shortStored = short;
-                                                $rootScope.longStored = long;
-                                                TabService.selectTab('preview');
-                                            }
-                                            else {
-                                                console.error('Failed saving url');
-                                            }
-
-                                        }, function (error) {
-                                            console.error('Failed saving url (promise)' + error);
-                                        });
-
-                                } else {
-                                    console.error('Error in creating stat document');
+                        BusinessDelegate.saveUrl(long, short, true)
+                            .then(function (result) {
+                                if (result.status === 'ok') {
+                                    $rootScope.stored = true;
+                                    $rootScope.shortStored = short;
+                                    $rootScope.longStored = long;
+                                    TabService.selectTab('preview');
                                 }
+                                else {
+                                    console.error('Failed saving url');
+                                }
+
                             }, function (error) {
-                                console.error('Error in creating stat document(promise)' + error);
+                                console.error('Failed saving url (promise)' + error);
                             });
+
 
                     } else {
 
@@ -207,7 +188,6 @@ app.controller('PreviewController', [
 
             deferred.promise.then(function (thumb) {
 
-                console.log(thumb);
                 $scope.preview = thumb;
             }, function (error) {
                 console.error('Error in loading thumbnail' + error);
@@ -227,7 +207,7 @@ app.controller('QrcodeController', [
             $scope.qrcodeEnabled = true;
         }
 
-}]);
+    }]);
 
 app.controller('StatsController', [
     '$scope',
@@ -237,12 +217,73 @@ app.controller('StatsController', [
 
         $scope.showChart = false;
 
+        $scope.getVisitOf = function (urlToSearch) {
+
+            BusinessDelegate.existOneShortUrl(urlToSearch)
+                .then(function(reply){
+
+                    //var exist = reply.number > 0;
+                    if(reply.status === 'ok') {
+
+                        //var urlDoc = reply.results[0];
+                        var urlDoc = reply.result;
+
+                        BusinessDelegate.countVisits(urlDoc._id)
+                            .then(function(countReply){
+
+                                $scope.count = countReply.count;
+
+                            },function(error){
+                                console.error('Error during count visit of '+urlDoc._id+': '+error);
+                            });
+
+                        BusinessDelegate.getVisitTime(urlDoc._id)
+                            .then(function(visitsReply){
+
+                                var visitsTemp = [];
+
+                                angular.forEach(visitsReply.results, function(visit){
+
+                                    visitsTemp.push({when: visit.visitedOn, from: visit.visitedFrom});
+                                });
+
+                                $scope.visits = visitsTemp;
+
+                            },function(error){
+                                console.error('Error during count visit of '+urlDoc._id+': '+error);
+                            });
+
+                    } else {
+
+                        //show Alert
+                    }
+
+                },function(error){
+                    console.error('Error in retrieving url '+error);
+                });
+
+
+
+        };
+
+        $scope.topTenVisited = function () {
+
+            BusinessDelegate.aggregateVisits()
+                .then(function(reply){
+
+                    console.log('Really?? Done!');
+                    console.log(reply);
+                },function(error){
+                    console.error('Error during mapReduce '+error);
+                })
+
+        };
+
         var loadData = function () {
 
-            BusinessDelegate.getStats()
+            BusinessDelegate.countVisits()
                 .then(function (result) {
 
-                    console.log(result);
                     $scope.stats = result.results;
 
                     $scope.showChart = true;
@@ -262,8 +303,7 @@ app.controller('StatsController', [
                 angularLoad.loadScript('/js3rdparty/vertxbus/vertxbus.js')
                     .then(function () {
 
-                        console.log("i'm in!");
-                        loadData();
+                        //loadData();
 
                     }, function (error) {
 
@@ -275,6 +315,7 @@ app.controller('StatsController', [
 
                 console.error('Error in loading sockjs.js ' + error);
             });
+
 
         var chartPopulate = function () {
 
@@ -407,25 +448,24 @@ app.controller('RedirectController', [
     'angularLoad',
     function ($scope, $routeParams, $window, BusinessDelegate, angularLoad) {
 
-        var param = $routeParams.url;
-
+        var urlToRetrieve = $routeParams.url;
 
         var redirect = function () {
 
-            BusinessDelegate.getLongByShort(param)
+            BusinessDelegate.existShortUrl(urlToRetrieve)
                 .then(function (reply) {
 
                     if (reply.number > 0) {
 
-                        BusinessDelegate.updateClick(reply.results[0].id_stats)
+                        var urlDoc = reply.results[0];
+                        BusinessDelegate.saveVisit(urlDoc._id, 'italy')
                             .then(function (result) {
 
-                                console.log(result);
-                                $window.location.href = reply.results[0].longUrl;
+                                $window.location.href = urlDoc.longUrl;
 
                             }, function (error) {
 
-                                console.error('Error in updating stat document' + error);
+                                console.error('Error in saving visit' + error);
                             });
 
                     } else {
@@ -441,12 +481,9 @@ app.controller('RedirectController', [
         angularLoad.loadScript('/js3rdparty/sockjs/sockjs.js')
             .then(function () {
 
-                console.log('Loading...');
-
                 angularLoad.loadScript('/js3rdparty/vertxbus/vertxbus.js')
                     .then(function () {
 
-                        console.log('Loading...2');
                         redirect();
 
                     }, function (error) {
