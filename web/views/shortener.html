@@ -1,47 +1,60 @@
-<div ng-controller="ShortenerController">
+<div class="row">
+    <div class="col-md-2">
+        <p class="text-muted"></p>
+    </div>
+    <div class="col-md-8" ng-controller="ShortenerController">
 
-    <div ng-init="customEnabled = false; showAlert= false;">
+        <div ng-init="customEnabled = false; showAlert= false;">
 
-        <!-- <alert type="danger">Just another try</alert> -->
+            <!-- <alert type="danger">Just another try</alert> -->
 
 
-        <form name="randomForm" class="input-group" novalidate>
+            <form name="randomForm" class="input-group" novalidate>
 
-            <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here"
-                   ng-model="longUrl" required>
+                <input type="url" class="form-control" style="font-weight:bold" placeholder="Paste your URL here"
+                       ng-model="longUrl" required>
             <span class="input-group-btn">
                 <a class="btn btn btn-primary" ng-click="randomForm.$valid && saveRandomUrl(longUrl)">
-                    Calculate</a>
+                    Shrink!</a>
             </span>
 
-        </form>
+            </form>
 
-        <br>
+            <br>
 
-        <div class="text-center">
-            <label style="display:inline; width:100%">Do you want to Customize it?
-                <a ng-click="customEnabled = !customEnabled" ng-show="customEnabled"><span
-                        class="glyphicon glyphicon-minus-sign"> </span></a>
-                <a ng-click="customEnabled = !customEnabled" ng-hide="customEnabled"><span
-                        class="glyphicon glyphicon-plus-sign"> </span></a>
+            <div class="text-center">
+                <label style="display:inline; width:100%">Do you want to Customize it?
+                    <a ng-click="customEnabled = !customEnabled" ng-show="customEnabled"><span
+                            class="glyphicon glyphicon-minus-sign"> </span></a>
+                    <a ng-click="customEnabled = !customEnabled" ng-hide="customEnabled"><span
+                            class="glyphicon glyphicon-plus-sign"> </span></a>
 
-            </label>
-        </div><br><br>
+                </label>
+            </div>
+            <br><br>
 
-        <div collapse="!customEnabled">
-            <form name="customForm" class="input-group" novalidate>
+            <div collapse="!customEnabled">
+                <form name="customForm" class="input-group" novalidate>
 
-                <input type="text" class="form-control" style="font-weight:bold" placeholder="Check for an available URL"
-                       ng-model="shortUrl" required>
+                    <input type="text" class="form-control" style="font-weight:bold"
+                           placeholder="Insert a name for your URL"
+                           ng-model="shortUrl" required>
                 <span class="input-group-btn">
                     <a class="btn btn btn-primary" ng-click="customForm.$valid && saveCustomUrl(longUrl, shortUrl)">
-                        Save Custom</a>
+                        Shrink!</a>
                 </span>
-            </form>
-            <div collapse="!alert.visible">
-                <alert type="danger" close="closeAlert($index)">Unfortunately this custom already exist! </alert>
+                </form>
+                <div collapse="!alertExist.visible">
+                    <alert type="danger" close="closeAlert('exist')">{{alertExist.msg}}</alert>
+                </div>
+                <div collapse="!alertBadWord.visible">
+                    <alert type="danger" close="closeAlert('bad')">{{alertBadWord.msg}}</alert>
+                </div>
             </div>
-        </div>
 
+        </div>
+    </div>
+    <div class="col-md-2">
+        <p class="text-muted"></p>
     </div>
 </div>

@@ -21,29 +21,11 @@ module.factory('BusinessDelegate', ['CRUD', function (CRUD) {
             return CRUD.save('urls', document);
         },
 
-        saveStat: function () {
-
-            var document = {
-                nClick: 0
-            };
-
-            return CRUD.save('stats', document);
-
-        },
-
         existShortUrl: function (short) {
 
             var matcher = {shortUrl: short};
 
             return CRUD.find('urls', matcher);
-
-        },
-
-        existOneShortUrl: function (short) {
-
-            var matcher = {shortUrl: short};
-
-            return CRUD.findOne('urls', matcher);
 
         },
 
@@ -55,10 +37,11 @@ module.factory('BusinessDelegate', ['CRUD', function (CRUD) {
 
         },
 
-        saveVisit: function (idUrl, from) {
+        saveVisit: function (idUrl, url, from) {
 
             var document = {
                 id_url: idUrl,
+                url: url,
                 visitedOn: Date.now(),
                 visitedFrom: from
             };
@@ -75,16 +58,7 @@ module.factory('BusinessDelegate', ['CRUD', function (CRUD) {
             return CRUD.count('visits', matcher);
         },
 
-        getVisitFrom : function (idUrl) {
-
-            var matcher = {
-                id_url: idUrl
-            };
-
-            return CRUD.find('visits', matcher);
-        },
-
-        getVisitTime : function (idUrl) {
+        getVisitsInfo : function (idUrl) {
 
             var matcher = {
                 id_url: idUrl
@@ -95,10 +69,11 @@ module.factory('BusinessDelegate', ['CRUD', function (CRUD) {
 
         aggregateVisits : function () {
 
-            var pipelines =
+            var pipelines = [
 
-                {$group: {_id: '$id_url', count: {$sum: 1}}}
-            ;
+                {$group: {_id: "$url", visits: {$sum: 1}}},
+                {$sort: {visits: -1}}
+            ];
 
             return CRUD.aggregate('visits', pipelines);
         }

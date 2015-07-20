@@ -40,16 +40,6 @@ module.factory('CRUD', ['$q', function ($q) {
             return this.sendRequest(params);
         },
 
-        findOne: function (collection, matcher) {
-
-            var params = {
-                action: 'findone',
-                collection: collection,
-                matcher: matcher
-            };
-            return this.sendRequest(params);
-        },
-
         save: function (collection, document) {
 
             var params = {
@@ -87,10 +77,13 @@ module.factory('CRUD', ['$q', function ($q) {
         aggregate: function(collection, pipelines) {
 
             var params = {
-                action: 'aggregate',
-                collection: collection,
-                pipelines: pipelines
+                'action': 'command',
+                'command': JSON.stringify({
+                    aggregate: collection,
+                    pipeline: pipelines
+                })
             };
+
             return this.sendRequest(params);
         }
     };

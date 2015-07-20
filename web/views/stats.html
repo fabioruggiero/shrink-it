@@ -1,25 +1,74 @@
-<div ng-controller="StatsController">
+<div class="row">
+    <div class="col-md-2">
+        <p class="text-muted"></p>
+    </div>
+    <div class="col-md-8" ng-controller="StatsController">
 
-    <form class="input-group">
+        <h3 class="text-center">Take a look of URLs stored statistics!</h3>
 
-        <input class="form-control" style="font-weight:bold" placeholder="Paste your URL here"
-               ng-model="url">
-            <span class="input-group-btn">
-                <a class="btn btn btn-primary" ng-click="getVisitOf(url)">
-                    Get Visit</a>
-                <a class="btn btn btn-primary" ng-click="topTenVisited()">
-                    Aggregate</a>
-            </span>
+        <h4 class="text-center">
+            <a ng-click="showTopTen()">See the Top Ten visited URL </a>
+            or
+            <a ng-click="showSingle()">find a specific URL</a>
+        </h4>
 
-    </form><br><br>
+        <div collapse="singleUrlCollapsed">
+            <form name="singleUrl" class="input-group" novalidate>
 
-    <div google-chart chart="chartObject"></div>
+                <input type="url" class="form-control" style="font-weight:bold"
+                       placeholder="Paste your URL here" ng-model="url" required>
+                <span class="input-group-btn">
+                    <a class="btn btn btn-primary" ng-click="singleUrl.$valid && getVisitOf(url)">
+                        Get Visits</a>
+                </span>
+            </form>
+            <div collapse="!alertNotFound.visible">
+                <alert type="{{alertNotFound.type}}" close="closeAlert()">{{alertNotFound.msg}}</alert>
+            </div>
+        </div>
 
-    <p>{{url}} has been visited {{count}} times!</p>
-    <ul>
-        <li ng-repeat="visit in visits">
-            {{visit.from}} ... {{visit.when | date}}
-        </li>
-    </ul>
+        <br>
 
+        <div collapse="topTenCollapsed">
+
+            <table class="topTen" style="width:100%">
+                <caption class="text-center"><h4>Top Ten Visited URLs</h4></caption>
+                <tr >
+                    <th class="text-center">Number</th>
+                    <th class="text-center">URL</th>
+                    <th class="text-center">Visits</th>
+                </tr>
+                <tr class="text-center" ng-repeat="url in topTen">
+                    <td>{{$index + 1}}&#176;</td>
+                    <td>http://127.0.0.1:8080/#/{{url._id}}</td>
+                    <td>{{url.visits}}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <div collapse="urlVisitsCollapsed">
+
+            <h4 style="font-weight:bold" >The {{url}} URL has been visited {{count}} times!</h4>
+
+            <table class="topTen" style="width:100%">
+                <tr >
+                    <th class="text-center">Number</th>
+                    <th class="text-center">Visited from</th>
+                    <th class="text-center">Visited on</th>
+                </tr>
+                <tr class="text-center" ng-repeat="visit in visits">
+                    <td>{{$index + 1}}</td>
+                    <td>{{visit.from}}</td>
+                    <td>{{visit.when | date}}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <p class="text-muted"></p>
+    </div>
 </div>

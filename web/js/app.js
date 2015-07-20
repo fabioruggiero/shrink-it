@@ -17,6 +17,9 @@ var app = angular.module('shortenerApp', [
 app.config(function ($routeProvider) {
 
     $routeProvider
+        .when('/', {
+            templateUrl: 'index.html'
+        })
         .when('/:url', {
             templateUrl: 'views/redirect.html'
         });

@@ -6,7 +6,7 @@ var mongo_config = {
     address: 'vertx.mongopersistor',
     host: '192.168.99.100',
     port: 27017,
-    database: 'pippo'
+    database: 'default_db'
 };
 
 var webServerConf = {
@@ -22,15 +22,9 @@ var webServerConf = {
         // Allow calls to get static album data from the persistor
         {
             address: 'vertx.mongopersistor',
+
             match: {
                 action: 'find',
-                collection: 'urls'
-            }
-        },
-        {
-            address: 'vertx.mongopersistor',
-            match: {
-                action: 'findone',
                 collection: 'urls'
             }
         },
@@ -70,8 +64,7 @@ var webServerConf = {
             address: 'vertx.mongopersistor',
             requires_auth: false,
             match: {
-                action: 'aggregate',
-                collection: 'visits'
+                action: 'command'
             }
         }
     ],
@@ -79,7 +72,10 @@ var webServerConf = {
     outbound_permitted: [{}]
 };
 
-container.deployModule('io.vertx~mod-mongo-persistor~2.1.1', mongo_config, 1);
+container.deployModule('io.vertx~mod-mongo-persistor~2.1.1', mongo_config, function() {
+
+    load('indexes.js');
+});
 
 container.deployModule('io.vertx~mod-auth-mgr~2.0.0-final');
 
