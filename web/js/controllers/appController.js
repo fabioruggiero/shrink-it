@@ -158,14 +158,15 @@ app.controller('PreviewController', [
     '$sce',
     '$rootScope',
     '$q',
+    '$http',
     'BusinessDelegate',
-    function ($scope, $sce, $rootScope, $q, BusinessDelegate) {
+    function ($scope, $sce, $rootScope, $q, $http, BusinessDelegate) {
 
         $scope.isCollapsed = false;
 
         $scope.thumbnailShow = function (type, fullUrl) {
 
-            $scope.previewEnabled = true;
+
 
             if (type === 'previewStored') {
 
@@ -183,7 +184,6 @@ app.controller('PreviewController', [
 
                         if (exist) {
 
-                            /** @namespace result.results */
                             var longUrl = result.results[0].longUrl;
 
                             thumbnailGen(longUrl);
@@ -200,16 +200,23 @@ app.controller('PreviewController', [
 
         var thumbnailGen = function (urlToGen) {
 
+
             var deferred = $q.defer();
 
             deferred.resolve($sce.trustAsResourceUrl('http://api.pagepeeker.com/v2/thumbs.php?size=x&url=' + urlToGen));
 
-            deferred.promise.then(function (thumb) {
+            return deferred.promise.then(function (thumb) {
 
                 $scope.preview = thumb;
+                $scope.previewEnabled = true;
+
             }, function (error) {
+
                 console.error('Error in loading thumbnail' + error);
             });
+
+
+
         };
 
     }]);

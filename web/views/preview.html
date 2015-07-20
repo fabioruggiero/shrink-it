@@ -26,15 +26,13 @@
                     <pre id="pre" class="form-control"
                          style="font-weight:bold">http://127.0.0.1:8080/#/{{shortStored}}</pre>
             <span class="input-group-btn">
-                <a popover="Copy it on clipboard" popover-trigger="mouseenter" class="btn btn btn-primary">
-                    <span class="glyphicon glyphicon-paste"></span>
-                </a>
                 <a class="btn btn btn-primary" ng-click="thumbnailShow('previewStored')">Look at Preview</a>
             </span>
 
             </form>
 
-        </div><br><br>
+        </div>
+        <br><br>
 
         <div ng-show="previewEnabled" class="text-center">
             <iframe height="365" width="485" ng-src="{{preview}}"></iframe>
