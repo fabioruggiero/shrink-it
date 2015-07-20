@@ -11,7 +11,7 @@ var mongo_config = {
 
 var webServerConf = {
     port: 8080,
-    host: '127.0.0.1',
+    host: 'localhost',
     bridge: true,
 
     inbound_permitted: [
