@@ -9,6 +9,7 @@ How to use
 In order to use Shrink it you need to have [Vertx.io](http://vertx.io/vertx2/) (not higher then 2.1.4) 
 installed and an instance of mongoDB running on the port 27017.
 
+
 #####1. Install Vert.x
 
 Download [vertx/2.1.4](https://bintray.com/vertx/downloads/distribution/2.1.4), unzip into a new folder 
@@ -18,6 +19,7 @@ You can see if Vert.x is working running from command line
 ```
 vertx version
 ```
+
 
 #####2. MongoDB 
 
@@ -37,7 +39,8 @@ Now your istance of mongoDB is running. This application communicates by default
 you can change it as your needs into the app.js file. 
 
 
-#####2. Run Shrink it 
+
+#####3. Run Shrink it 
 
 Once all is up clone this repo, go to the local shrink-it directory and run from the command line: 
 
