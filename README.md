@@ -42,7 +42,13 @@ you can change it as your needs into the app.js file.
 
 #####3. Run Shrink it 
 
-Once all is up clone this repo, go to the local shrink-it directory and run from the command line: 
+Once all is up clone this repository running: 
+
+```
+git clone https://github.com/fabioruggiero/angular-shortener.git
+```
+
+move to the local shrink-it directory and run from the command line: 
 
 ```
 vertx run app.js
