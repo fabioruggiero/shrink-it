@@ -40,7 +40,7 @@
                 </tr>
                 <tr class="text-center" ng-repeat="url in topTen">
                     <td>{{$index + 1}}&#176;</td>
-                    <td>http://127.0.0.1:8080/#/{{url._id}}</td>
+                    <td>{{prefix + url._id}}</td>
                     <td>{{url.visits}}</td>
                 </tr>
 

@@ -35,6 +35,8 @@ app.controller('ShortenerController', [
 
         $rootScope.stored = false;
 
+        var prefix = window.location.protocol+'//'+window.location.hostname+':'+window.location.port+'/#/';
+
         $scope.closeAlert = function (alert) {
             if (alert === 'exist') {
                 $scope.alertExist = null;
@@ -58,7 +60,7 @@ app.controller('ShortenerController', [
                             .then(function (result) {
                                 if (result.status === 'ok') {
                                     $rootScope.stored = true;
-                                    $rootScope.shortStored = newUrl;
+                                    $rootScope.shortStored = prefix + newUrl;
                                     $rootScope.longStored = long;
                                     TabService.selectTab('preview');
                                 }
@@ -107,7 +109,7 @@ app.controller('ShortenerController', [
                                     .then(function (result) {
                                         if (result.status === 'ok') {
                                             $rootScope.stored = true;
-                                            $rootScope.shortStored = short;
+                                            $rootScope.shortStored = prefix + short;
                                             $rootScope.longStored = long;
                                             TabService.selectTab('preview');
                                         }
@@ -263,6 +265,8 @@ app.controller('StatsController', [
             $scope.topTenVisited();
         };
 
+        $scope.prefix = window.location.protocol+'//'+window.location.hostname+':'+window.location.port+'/#/';
+
         $scope.getVisitOf = function (fullUrl) {
 
             //Removing 'http://127.0.0.1:8080/#/', first 24 char
@@ -332,7 +336,6 @@ app.controller('StatsController', [
                         for (var i = 0; i < results.length; i++) {
 
                             topTenTemp[i] = results[i];
-
                         }
                     }
 
@@ -365,12 +368,34 @@ app.controller('RedirectController', [
     '$routeParams',
     '$window',
     '$http',
+    '$timeout',
     'BusinessDelegate',
     'angularLoad',
     'geolocation',
-    function ($scope, $routeParams, $window, $http, BusinessDelegate, angularLoad, geolocation) {
+    function ($scope, $routeParams, $window, $http, $timeout, BusinessDelegate, angularLoad, geolocation) {
 
         var urlToRetrieve = $routeParams.url;
+
+
+        angularLoad.loadScript('/js3rdpart/sockjs/sockjs.js')
+            .then(function () {
+
+                angularLoad.loadScript('/js3rdpart/vertxbus/vertxbus.js')
+                    .then(function () {
+
+                        //waiting for the socket
+                        $timeout(redirect, 500);
+
+                    }, function (error) {
+
+                        console.error('Error in loading vertxbus.js ' + error);
+
+                    });
+
+            }, function (error) {
+
+                console.error('Error in loading sockjs.js ' + error);
+            });
 
         var redirect = function () {
 
@@ -390,7 +415,7 @@ app.controller('RedirectController', [
 
                                 var long = location.coords.longitude;
 
-                                $http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '+&sensor=true')
+                                $http.get('http://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+long+'+&sensor=true')
                                     .success(function (locationInfo) {
 
                                         //Getting city and contry from user's ip
@@ -428,24 +453,7 @@ app.controller('RedirectController', [
                 });
         };
 
-        angularLoad.loadScript('/js3rdpart/sockjs/sockjs.js')
-            .then(function () {
 
-                angularLoad.loadScript('/js3rdpart/vertxbus/vertxbus.js')
-                    .then(function () {
-
-                        redirect();
-
-                    }, function (error) {
-
-                        console.error('Error in loading vertxbus.js ' + error);
-
-                    });
-
-            }, function (error) {
-
-                console.error('Error in loading sockjs.js ' + error);
-            });
 
     }]);
 

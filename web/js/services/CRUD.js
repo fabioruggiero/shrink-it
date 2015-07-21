@@ -23,7 +23,6 @@ module.factory('CRUD', ['$q', function ($q) {
 
             eb.send(modulo, requestDoc,
                 function (reply) {
-                    console.log(reply);
                     deferred.resolve(reply);
                 });
             return deferred.promise;
