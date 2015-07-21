@@ -13,11 +13,7 @@ installed and an instance of mongoDB running on the port 27017.
 #####1. Install Vert.x
 
 Download [vertx/2.1.4](https://bintray.com/vertx/downloads/distribution/2.1.4), unzip into a new folder 
-<<<<<<< HEAD
 and set the bin folder in the path environment.
-=======
-and set the path environment on the bin folder inside.
->>>>>>> c31fa2a0b832c8deab323cc5bc706b94b9a3bc8c
 You can see if Vert.x is working running from command line 
 
 ```
@@ -33,7 +29,6 @@ If you are using Docker you can pull the image of mongoDB typing into the docker
 docker pull mongo
 ```
 
-<<<<<<< HEAD
 Once downloaded, run it by: 
 
 ```
@@ -42,16 +37,6 @@ docker run -d -t 27017:27017 --name mongo mongod
 
 Now your istance of mongoDB is running. This application communicates with default Docker host 192.168.99.100, 
 but you can change it as your needs into the app.js file. 
-=======
-Once downloaded run it by: 
-
-```
-docker run -d -t 27017:27017 mongo
-```
-
-Now your istance of mongoDB is running. This application communicates by default at the host 192.168.99.100, 
-you can change it as your needs into the app.js file. 
->>>>>>> c31fa2a0b832c8deab323cc5bc706b94b9a3bc8c
 
 
 
@@ -71,12 +56,6 @@ vertx run app.js
 
 Then point your browser at 
 
-<<<<<<< HEAD
 ```
 http://localhost:8080
 ```
-=======
-```bash
-http://localhost:8080
-```
->>>>>>> c31fa2a0b832c8deab323cc5bc706b94b9a3bc8c
