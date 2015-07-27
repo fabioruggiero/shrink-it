@@ -326,7 +326,7 @@ app.controller('StatsController', [
 
                     console.log(reply);
                     var results = reply.result.result;
-                    var topTen;
+                    var topTenTemp = [];
 
                     if (results.length < 10) {
 
@@ -339,7 +339,6 @@ app.controller('StatsController', [
                         }
                     }
 
-                    console.log(topTen);
                     $scope.topTen = topTenTemp;
                     $scope.topTenCollapsed = false;
                 }, function (error) {
