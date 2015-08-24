@@ -74,7 +74,7 @@ var webServerConf = {
 
 container.deployModule('io.vertx~mod-mongo-persistor~2.1.1', mongo_config, function() {
 
-    load('indexes.js');
+    load('index.js');
 });
 
 container.deployModule('io.vertx~mod-auth-mgr~2.0.0-final');
